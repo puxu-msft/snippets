@@ -1,17 +1,20 @@
 param(
+    [Parameter(Mandatory, Position=0)]
+    [string]$Exe,
+
     [switch]$Detach,
 
     [Parameter(ValueFromRemainingArguments)]
     [string[]]$Remaining
 )
 
-$exe = .\a.exe
-
-Push-Location $PSScriptRoot
+# Push-Location $PSScriptRoot
+[Console]::TreatControlCAsInput = $true
 try {
-    Start-Process $exe -ArgumentList @Arguments `
+    Start-Process $Exe -ArgumentList $Remaining `
         -Wait:$(-not $Detach) -NoNewWindow:$(-not $Detach)
 }
 finally {
-    Pop-Location
+    [Console]::TreatControlCAsInput = $false
+    # Pop-Location
 }
